@@ -1,0 +1,28 @@
+{% extends 'posts_app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="col-md-8 bg-light container mt-5 px- py-5  ">
+	<form  method="post" class="form-group  d-inline" enctype="multipart/form-data">
+	{% csrf_token %}
+
+	{% if form.non_field_errors %}
+	{% for error in form.non_field_errors %}
+	<p class="text-danger">{{error}}</p>
+	{% endfor %}
+	{% endif %}
+
+	{% for field in profile_form %}
+	 {{field|as_crispy_field}} {{ field.errors|striptags}} 
+	{% endfor %}
+	
+
+	{% for field in user_form %}
+	 {{field|as_crispy_field}} {{ field.errors|striptags}} 
+	{% endfor %}
+	<button type="submit" class="btn btn-outline-success">update</button>
+</form>
+
+</div>
+ 
+{% endblock %}

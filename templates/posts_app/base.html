@@ -1,0 +1,140 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+	<title>mysite</title>
+	<style type="text/css">
+		#hint_id_password1{
+			display: none;
+		}
+		#hint_id_new_password1{
+			display: none;
+		}
+
+	</style>
+</head>
+<body>
+{% block content %}
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  
+ $(document).ready(function(){
+  $('.like_button').click(function(event){
+    event.preventDefault();
+    var post_id = $(this).attr('data');
+    $.ajax(
+    {
+        type:"GET",
+        url: "/posts_app/like/",
+        data:{
+              'post_id': post_id
+        },
+        success: function( data ) 
+        {
+            if(data['is_liked']==true){
+            $('#change'+post_id).removeClass('text-secondary');
+            $('#change'+post_id).addClass('text-primary');  
+            }
+            else{
+              $('#change'+post_id).removeClass('text-primary');
+              $('#change'+post_id).addClass('text-secondary');
+            }
+            
+
+            $('#post_id'+post_id).text(data['total_likes']);
+
+        }
+     });
+  });
+
+  
+$(document).on('submit', '.comment-form', function(event){
+      event.preventDefault();
+     var reply_id = $(this).attr('data');
+
+      $.ajax({
+        type: 'POST',
+        url: $(this).attr('action'),
+        data: $(this).serialize(),
+        success: function(response){
+
+          $('.comment-section').html(response['form'])
+          if(reply_id){
+            
+            $('#view_reply'+reply_id).removeClass('d-none');
+          }
+        },
+        error: function(rs, e){
+          
+        },
+      });
+    });
+ 
+
+ });
+
+$(document).ready(function(){
+  $('.follow').click(function(event){
+  event.preventDefault();
+  var profile_id = $(this).attr('data')
+  $.ajax({
+    type: 'GET',
+    url: '{% url "posts_app:follow" %}',
+    data:{
+      'profile_id':profile_id
+    },
+    success:function(data){
+      if(data['following']==true){
+        
+        $('.is_following').text('following');
+      }
+      else{
+        $('.is_following').text('follow');
+      }
+    }
+  });
+  });
+
+  $('.delete_post').click(function(event){
+  event.preventDefault();
+  var post_id = $(this).attr('data');
+  if(confirm('Do you want to delete this post ?')){
+
+
+  $.ajax({
+    type:'POST',
+    url:$('.delete_post'+post_id).attr('action'),
+    data:{
+      'post_id':post_id,
+      'csrfmiddlewaretoken': '{{ csrf_token }}',
+    },
+    success:function(data){
+      if(data['deleted']=='yes'){
+      $('.post'+post_id).remove();
+      }
+    }
+  });
+  } 
+  });
+
+  });
+
+
+
+</script>
+{% endblock %}
+
+
+
+</body>
+</html>

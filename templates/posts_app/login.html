@@ -1,0 +1,27 @@
+{% extends 'posts_app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="col-md-6 bg-light container mt-5 px-5 py-5  ">
+	<form  method="post" class="form-group px-5 d-inline">
+	{% csrf_token %}
+
+	{% if form.non_field_errors %}
+	{% for error in form.non_field_errors %}
+	<p class="text-danger">{{error}}</p>
+	{% endfor %}
+	{% endif %}
+
+	{% for field in form %}
+	 {{field|as_crispy_field}} {{ field.errors|striptags}} 
+	{% endfor %}
+	
+	<button type="submit" class="btn btn-outline-success">Login</button>
+	
+</form>
+<a class=" mr-3 ml-5 " href="{% url 'posts_app:signup' %}">Sign_Up</a>
+
+
+</div>
+ 
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends 'posts_app/base.html' %}
+{% load crispy_forms_tags %}
+{% load social_share %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3 border border-primary pt-5 " style="background-color: #041b40;  " >
+            <div class="panel text-center text-white ">
+                {% if request.user.profile.image %}
+                <a href="{% url 'posts_app:profile' request.user.profile.id %}"><img src="{{request.user.profile.image.url}}" class="rounded-circle" width="100px" height="100px"></a>
+                {% endif %}
+                <h5 class="text-white mt-5" >{{request.user.get_full_name}}</h5>
+                <h6>{{request.user.profile.status}}</h6>
+            <div class=" rounded-pill  mx-2 my-3 text-white " style="background-color: #d417d4">
+            
+                <a href="{% url 'posts_app:create_post' %}" class="text-white text-decoration-none"><h6 class="d-inline">Add New Post<i class="fa fa-plus fa-lg  " aria-hidden="true" class="" style="margin-left: 10px;"></i></h6> </a>
+
+           </div>
+           <div class=" rounded-pill  mx-2 my-3 text-white " style="background-color: #d417d4">
+            
+                <a href="{% url 'posts_app:profile' request.user.profile.id %}" class="text-white text-decoration-none"><h6 class="d-inline">View Profile<i class="fa fa-user fa-lg " aria-hidden="true" class="" style="margin-left: 10px;"></i></h6> </a>
+
+           </div>
+           <div class=" rounded-pill  mx-2 my-3 text-white " style="background-color: #d417d4">
+            <a href="{% url 'posts_app:edit_profile' %}" class="text-white text-decoration-none"><h6 class="d-inline ml-2">Edit Profile<i class="fa fa-edit fa-lg " aria-hidden="true" class="" style="margin-left: 10px;"></i></h6> </a>
+
+           </div>
+           <div class=" rounded-pill  mx-2 my-3 text-white " style="background-color: #d417d4">
+            <a href="{% url 'logout' %}" class="text-white text-decoration-none"><h6 class="d-inline ml-2">Logout<i class="fa fa-sign-out fa-lg " aria-hidden="true" class="" style="margin-left: 10px;"></i></h6> </a>
+
+           </div>
+            </div>
+          </div>
+
+        <div class="col-md-6 border border-success"style="overflow: scroll; margin: 0px; padding: 0px; background-color: #d417d4">
+           {% for post in page_obj %}   
+           <div class=" rounded  mx-2 my-3   mb-2" style="background-color: white;">
+             <a href="{% url 'posts_app:profile' post.owner.profile.id %}" class="text-decoration-none"><img src="{{ post.owner.profile.image.url }}" class="rounded-circle" width="50px" height="50px"> 
+            
+             <p class="d-inline  mr-2">{{post.owner.get_full_name}}</p>
+             </a>
+             <p class=" d-inline text-secondary pt-1 float-right">{{post.created}}</p>
+             <div class="  px-1 mt-2 ml-5" >
+                
+               
+                <img src="{{post.image.url}}" class="rounded " width="400px" height="300px">
+           
+                <div class="rounded bg-secondary text-white px-1 mt-2  ">
+                  <p>
+                {% if post.text %}
+                {{post.text}}
+                {% endif %} 
+                </p>
+                </div>
+
+              </div>
+              <div class="container pl-5 ml-5">
+                  
+      {% if request.user in post.likes.all %}     
+      <a href="#" id="change{{post.id}}"  class="like_button text-primary" data="{{ post.id }}"><i class="fa fa-heart fa-lg" ></i></a><span class="" id="post_id{{post.id}}">{{ post.total_likes }} </span>
+      {% else %}   
+      <a href="#" id="change{{post.id}}" class="like_button text-secondary" data="{{ post.id }}"><i class="fa fa-heart fa-lg" ></i></a><span id="post_id{{post.id}}" class="text-secondary">{{ post.total_likes }} </span>
+     
+      {% endif %}
+      
+        <a href="{% url 'posts_app:detail_post' post.id %}"><i class="fa fa-envelope fa-lg" aria-hidden="true" class="" style="margin-left: 100px"></i></a>
+        <span class="d-inline">{{post.comments_count}}</span>
+        {% post_to_whatsapp post.get_absolute_url %}
+        {% post_to_facebook post.get_absolute_url %}
+        {% post_to_twitter post.get_absolute_url %}
+
+               
+                </div>
+
+           </div>
+           
+           {% endfor %}
+ <div class=" rounded-pill  mx-2 my-3 text-white bg-dark pl-5 ">
+           <div class="pagination text-center ml-5">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+           </div>
+      
+          </div>
+
+        <div class="col-md-3 border border-success " style="margin:0px; padding: 0px; background-color: #041b40">
+         <div class="" style="height:300px; overflow: scroll; ">
+           <div class="bg-primary text-white text-center">
+             <h6 class="">followers</h6>
+           </div>
+           
+           {% for user in request.user.profile.following.all %}
+           <a href="{% url 'posts_app:profile' user.id %}" class="text-decoration-none">
+             <div class=" rounded-pill  mx-2 my-3 text-white " style="background-color: #d417d4">
+             <img src="{{user.profile.image.url}}" class="rounded-circle" width="40px" height="40px"> 
+             <p style="font-size: 15px" class="d-inline ml-2">{{ user.get_full_name }}</p>
+           </div>
+           </a>
+           {% endfor %}
+
+         </div>
+
+         <div class="" style="height:300px;  overflow: scroll;">
+           <div class="bg-primary text-white text-center">
+             <h6>following</h6>
+           </div>
+        {% for profile in following_profile_list %}
+         <a href="{% url 'posts_app:profile' user.id %}" class="text-decoration-none">
+             <div class=" rounded-pill  mx-2 my-3 text-white " style="background-color: #d417d4">
+             <img src="{{ profile.image.url }}" class="rounded-circle" width="40px" height="40px"> 
+             <p style="font-size: 15px" class="d-inline ml-2">{{ profile.owner.get_full_name }}</p>
+           </div>
+           </a>
+        {% endfor %}
+
+         </div>
+
+          </div>
+      </div>
+  </div>
+
+
+
+{% endblock %}
