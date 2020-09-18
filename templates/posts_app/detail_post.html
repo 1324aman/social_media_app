@@ -9,7 +9,9 @@
    <div class=" rounded  mx-2 my-3  px-2  mb-2 pb-4" style="background-color: white;">
     {% if post.owner.profile.image %}
 
-    <img src="{{post.owner.profile.image.url}}" class="rounded-circle" width="50px" height="50px"> 
+    <img src="{{post.owner.profile.image.url}}" class="rounded-circle" width="50px" height="50px">
+    {% else %}
+     <h3 class='d-inline '><i class="fa fa-user-plus " aria-hidden="true"></i></h3>
     {% endif %}
     <p class="d-inline  mr-2">{{post.owner.get_full_name}}</p>
     <p class=" d-inline text-secondary pt-1 float-right">{{post.created}}</p>
@@ -24,26 +26,26 @@
 
      <div class="rounded bg-secondary text-white px-1 mt-2  ">
       <p>
-        {{post.text}} 
+        {{post.text}}
       </p>
     </div>
 
   </div>
   <div class="container pl-4 ">
 
-    {% if request.user in post.likes.all %}     
+    {% if request.user in post.likes.all %}
       <a href="#" id="change{{post.id}}"  class="like_button text-primary" data="{{ post.id }}"><i class="fa fa-heart fa-lg" ></i></a><span class="" id="post_id{{post.id}}">{{ post.total_likes }} </span>
-      {% else %}   
+      {% else %}
       <a href="#" id="change{{post.id}}" class="like_button text-secondary" data="{{ post.id }}"><i class="fa fa-heart fa-lg" ></i></a><span id="post_id{{post.id}}" class="text-secondary">{{ post.total_likes }} </span>
-     
+
       {% endif %}
 
 
-  </div>         
+  </div>
   <div class="comment-section">
     {% include 'posts_app/comment.html' %}
   </div>
- 
+
 </div>
 
 

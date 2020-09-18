@@ -2,10 +2,14 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="container bg-dark pt-3  pl-5 ">
-	<div class="bg-light" style="margin-left: 180px; margin-right: 250px;">
-		<div class="" style="margin-left: 250px; margin-top: 10px;">
-			<img src="{{user.profile.image.url}}" class="rounded-circle mt-3" width="100px" height="100px">
+<div class="container bg-dark pt-3 pl-5 ">
+	<div class="  bg-light col-lg-4 col-md-4 col-sm-4  justify-content-center" style="margin-left: 30%">
+		<div class="">
+			{% if user.profile.image %}
+                <a href="{% url 'posts_app:profile' user.profile.id %}"><img src="{{user.profile.image.url}}" class="rounded-circle" width="100px" height="100px"></a>
+                {% else %}
+                <a href="{% url 'posts_app:profile' user.profile.id %}"class='text-secondary display-4'><i class="fa fa-user-plus" aria-hidden="true"></i></a>
+                {% endif %}
 
 		{% if request.user != user %}
 		{% if request.user in user.profile.following.all %}
@@ -14,7 +18,7 @@
 		<button  class=" follow btn btn-success ml-5 " data='{{user.profile.id}}' ><span class="is_following">follow</span></button>
 		{% endif %}
 		<br>
-		
+
 		{% endif %}
 		<p>{{user.get_full_name}}</p>
 		<p>{{user.profile.status}}</p>
@@ -22,16 +26,16 @@
 	</div>
 {% for post in post_list %}
 	<div class="text-center ml-5 pl-5" >
-		
-	
+
+
 		<div class=" post{{post.id}} col-md-8 bg-info ml-5 mt-3 py-3" >
 			{% if post.image %}
 			<img src="{{post.image.url}}" width="300" height="300" class="mb-3"><br>
-			
+
 			{% endif %}
 			<div class="rounded bg-secondary text-white px-1 mt-2  ">
                   <p>
-                {{post.text}} 
+                {{post.text}}
                 </p>
                 </div>
 			{% if request.user == post.owner %}
@@ -45,9 +49,9 @@
 		</div>
 	</div>
 {% endfor %}
-</div> 
+</div>
 <script>
-	
+
 
 </script>
 

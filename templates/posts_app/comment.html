@@ -10,7 +10,7 @@
    {% endif %}
 
    {% for field in form %}
-   {{field|as_crispy_field}} {{ field.errors|striptags}} 
+   {{field|as_crispy_field}} {{ field.errors|striptags}}
    {% endfor %}
 
    <button type="submit" class=" comment btn btn-outline-success" id="{{post.id}}">comment</button>
@@ -20,7 +20,11 @@
  {% for comment in comments %}
 
  <div class=" rounded-pill  pb-3 my-3 text-white bg-primary" style="">
+   {% if comment.owner.profile.image %}
    <a href="{% url 'posts_app:profile' comment.owner.profile.id %}"><img src="{{ comment.owner.profile.image.url }}" class="rounded-circle float-left ml-3 mt-3 " width="50px" height="50px"> </a>
+   {% else %}
+   <a href="{% url 'posts_app:profile' comment.owner.profile.id %}" class='text-white' ><i class='fa fa-user-plus fa-lg float-left ml-3 mt-3 '></i> </a>
+   {% endif %}
    <p class="d-inline float-left ml-1" style="font-size: 15px">{{ comment.owner.get_full_name }}</p>
    <p class="d-inline text-light float-right mr-3"style="font-size: 15px">{{comment.timestamp}}</p><br>
 
@@ -32,7 +36,7 @@
 
    <a href="" class="text-white d-inline view text-decoration-none" data='{{ comment.id }}'>
       <i class="fa fa-eye fa-md d-inline" aria-hidden="true" class=" d-inline " > {{ comment.replies.count }}</i>
-      
+
    </a>
    </div>
    <br>
@@ -45,20 +49,24 @@
        <input type="text" class="form-control" name="content" placeholder="reply here ..."><br>
 
        <button class="btn btn-outline-success btn-sm">Comment</button>
-      
+
     </form>
  </div>
 <div  id="view_reply{{ comment.id }}" class="d-none">
  {% for reply in comment.replies.all %}
  <div class=" rounded-pill  my-3 ml-5 pb-2 text-white bg-dark">
+   {% if reply.owner.profile.image %}
    <a href="{% url 'posts_app:profile' reply.owner.profile.id %}"><img src="{{ reply.owner.profile.image.url }}" class="rounded-circle float-left ml-3 mt-3" width="30px" height="30px"> </a>
+   {% else %}
+   <a href="{% url 'posts_app:profile' reply.owner.profile.id %}" class='text-white'><i class='fa fa-user-plus fa-lg float-left ml-3 mt-3'></i></a>
+   {% endif %}
    <p class="d-inline float-left ml-1" style="font-size: 12px">{{reply.owner.get_full_name}}</p>
    <p class="d-inline text-light float-right mr-3"style="font-size: 12px">{{reply.timestamp}}</p><br>
 
    <h6 class="" style="font-size: 12px;">{{reply.content}}</h6>
-   
+
 </div>
-   
+
 {% endfor %}
 </div>
  {% endfor %}
@@ -70,14 +78,14 @@
       event.preventDefault();
       var comment_id = $(this).attr('data');
       $('#view_reply'+comment_id).toggleClass('d-none d-block');
-      
+
    });
 
    $('.reply').click(function(event){
       event.preventDefault();
       var comment_id = $(this).attr('data');
       $('.reply-comment-form'+comment_id).toggleClass('d-none d-block');
-      
+
    });
 </script>
 
