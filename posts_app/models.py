@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.contrib.auth.models import User
+
+
+User._meta.get_field('email')._unique = True
 
 
 class Post(models.Model):
@@ -27,7 +31,7 @@ class Post(models.Model):
 
 class Profile(models.Model):
 	owner = models.OneToOneField(User, on_delete=models.CASCADE)
-	image = models.ImageField(upload_to='profile_image', default= 'abdul kalam.jpg')
+	image = models.ImageField(upload_to='profile_image')
 	status = models.CharField(max_length=200,blank=True,null=True, default='this is you status')
 	following = models.ManyToManyField(User, related_name='following')
 

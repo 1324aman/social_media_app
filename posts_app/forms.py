@@ -3,9 +3,23 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from crispy_forms.helper import FormHelper
 from .models import Post, Profile, Comment
+from django import forms
+from django.contrib.auth.forms import AuthenticationForm
+
+
+class CustomAuthForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class':'validate','placeholder': 'email or username'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder':'password'}))
+
 
 class SignupForm(UserCreationForm):
-	password2 = forms.CharField(label='confirm password', widget=forms.PasswordInput)
+	password2 = forms.CharField(label='confirm password', widget=forms.PasswordInput(attrs={'placeholder':'confirm password'}))
+	password1 = forms.CharField(label='password', widget=forms.PasswordInput(attrs={'placeholder':'password'}))
+	email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'placeholder':'email'}))
+	username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'username'}))
+	first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'first_name'}))
+	last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'last_name'}))
+
 	helper = FormHelper()
 	helper.form_class = 'form-horizontal'
 	helper.label_class = 'col-lg-6'
@@ -13,13 +27,14 @@ class SignupForm(UserCreationForm):
 	class Meta:
 		model = User
 		fields = ['username', 'first_name', 'last_name', 'email']
-		labels = {'email':'Email'}
 		help_texts = {
 
             'username': None,
         }
 
+
 class PostCreateForm(forms.ModelForm):
+	text = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'message'}))
 	helper = FormHelper()
 	helper.form_class = 'form-horizontal'
 	helper.label_class = 'col-lg-2'
@@ -49,6 +64,7 @@ class UpdateUserForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
+	content = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'comment here'}))
 	helper = FormHelper()
 	helper.form_class = 'form-horizontal'
 	helper.label_class = 'col-lg-2'

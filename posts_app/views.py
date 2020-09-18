@@ -1,3 +1,4 @@
+from posts_app.forms import CustomAuthForm
 from django.template.loader import render_to_string
 from django.shortcuts import (
 	render, HttpResponseRedirect,redirect,
@@ -134,10 +135,11 @@ class UserRegisterView(CreateView):
 
 def user_login(request):
 	if request.method == 'POST':
-		form = AuthenticationForm(request=request, data=request.POST)
+		form = CustomAuthForm(request=request, data=request.POST)
 		if form.is_valid():
 			username = form.cleaned_data['username']
 			password = form.cleaned_data['password']
+			
 			user = authenticate(username=username, password=password)
 			if user is not None:
 				login(request, user)
@@ -147,7 +149,7 @@ def user_login(request):
 					return HttpResponseRedirect(next_url)
 				return redirect('posts_app:home')
 	else:
-		form = AuthenticationForm()
+		form = CustomAuthForm()
 	return render(request, 'posts_app/login.html', {'form':form})
 
 
