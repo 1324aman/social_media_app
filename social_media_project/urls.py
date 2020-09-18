@@ -23,7 +23,7 @@ from posts_app import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('posts_app/', include('posts_app.urls')),
-    path('', views.user_login, name='login' ),
+    path('', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout' ),
     
 ]
