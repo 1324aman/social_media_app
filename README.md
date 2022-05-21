@@ -14,7 +14,6 @@ html
 # Running locally
 ```
 1. Create virtual environment
-1. create a django project
 1. clone the repo using git@github.com:1324aman/social_media_app.git
 1. pip install requirements.txt
 1. python manage.py migrate
